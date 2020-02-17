@@ -1,8 +1,18 @@
+'''
+Sowmik Sarker
+23th batch
+Dept. of Computer Science and Engineering
+University of Dhaka.'''
 # *************************************************************************************************************************
 try:
 	import pandas as pd
 	import requests
 	from bs4 import BeautifulSoup
+
+	import plotly
+	import chart_studio.plotly as py
+	import plotly.graph_objs as plot_graph
+	from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 except Exception as e:
 	print("Some Modules are missing {}".format(e))
@@ -138,9 +148,84 @@ else:
 	})
 
 	print(repositories)
+	# repositories.to_csv('data/Sowmik23_repos.csv')
 
 
-	# Analysis
+	#### Analysis  **************************
+
+	# read data from csv file
+	print("\n\nReading data from csv file\n")
+	data = pd.read_csv('data/Sowmik23_repos.csv', parse_dates=True)
+
+
+	data['date'] =  pd.to_datetime(data['updated_time'])
+	# print(data['date'])
+
+	data['update_date'] = data['date'].dt.date
+	print(data['update_date'])
+
+	# print("Hour\n")
+	# data['update_hour'] = data['date'].dt.hour
+	# print(data['update_hour'])
+
+	# print("Month\n")
+	data['update_month'] = data['date'].dt.month
+	# print(data['update_month'])
+
+	# print("Year\n")
+	data['update_year'] = data['date'].dt.year
+	# print(data['update_year'])
+
+
+	# fix the columns
+	data = data[['name', 'language', 'update_date', 'update_month', 'update_year']]
+
+	# print the table
+	# data.info()
+
+	# head() returns top n column
+	data.head()
+	# print(data.head())
+
+	update_in_month = data.groupby('update_month')[['name']].count()
+	#rename the column name
+	update_in_month = update_in_month.rename(columns = {'name': 'update_count'})   
+	# print(commits_in_month)
+
+
+	# figure of commits in a Month
+	fig = plot_graph.Figure([plot_graph.Bar(
+	    x=update_in_month.index, 
+	    y=update_in_month.update_count, 
+	    text=update_in_month.update_count, 
+	    textposition='auto')])
+	fig.update_layout(
+	    title = 'Commits in Month by Sowmik23', 
+	    xaxis_title = 'Month', 
+	    yaxis_title = 'Commits Count', 
+	    xaxis_tickmode = 'linear')
+	fig.show()
+
+
+
+	lan_based_repo = data.groupby('language')[['name']].count()
+	#rename the column name
+	lan_based_repo = lan_based_repo.rename(columns = {'name': 'language'})   
+
+	# figure of different commits in different languages
+	fig = plot_graph.Figure([plot_graph.Bar(
+	    x=lan_based_repo.index, 
+	    y=lan_based_repo.language, 
+	    text=lan_based_repo.language, 
+	    textposition='auto')])
+	fig.update_layout(
+	    title = 'Language based repositories by Sowmik23', 
+	    xaxis_title = 'Languages', 
+	    yaxis_title = 'Repo Count', 
+	    xaxis_tickmode = 'linear')
+	fig.show()
+
+
 
 	
 

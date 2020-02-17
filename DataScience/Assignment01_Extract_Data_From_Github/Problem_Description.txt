@@ -1,0 +1,14 @@
+Problem definition: Query REST API and extract data from GitHub
+
+
+Make a system using python that uses REST API and extracts various data/content/Information from GitHub
+
+- Task division can be as follows:
+
+     - Requirement analysis
+
+     - Design
+
+     - Implementation (more division is possible, different people develop different module and this must be done to build up group management strategy)
+
+     - Testing
